@@ -204,7 +204,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213989086}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &213989090
 Camera:
   m_ObjectHideFlags: 0
@@ -1263,7 +1263,7 @@ GameObject:
   - component: {fileID: 487246911}
   - component: {fileID: 487246910}
   - component: {fileID: 487246909}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Plane (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
