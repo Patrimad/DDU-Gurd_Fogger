@@ -378,7 +378,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Empty Room
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -691,9 +691,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1621326532445482515, guid: a85112cf024ea7841bd8ee2dddb99059, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2042039788}
-    - targetCorrespondingSourceObject: {fileID: 1621326532445482515, guid: a85112cf024ea7841bd8ee2dddb99059, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1894866470}
     - targetCorrespondingSourceObject: {fileID: 1621326532445482515, guid: a85112cf024ea7841bd8ee2dddb99059, type: 3}
       insertIndex: -1
       addedObject: {fileID: 405497764}
@@ -1509,13 +1506,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2018547874}
-        m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
+      - m_Target: {fileID: 2018547880}
+        m_TargetAssemblyTypeName: Launcher, Assembly-CSharp
+        m_MethodName: CreateRoom
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 2042039789}
-          m_ObjectArgumentAssemblyTypeName: Menu, Assembly-CSharp
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2169,7 +2166,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 333488304}
-  m_Father: {fileID: 2018547879}
+  m_Father: {fileID: 2042039788}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -2219,7 +2216,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1894866472}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2018547880}
+        m_TargetAssemblyTypeName: Launcher, Assembly-CSharp
+        m_MethodName: LeaveRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1894866472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2411,6 +2420,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1621326532445482515, guid: a85112cf024ea7841bd8ee2dddb99059, type: 3}
   m_PrefabInstance: {fileID: 669784655}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2018547880 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2482735129953861313, guid: a85112cf024ea7841bd8ee2dddb99059, type: 3}
+  m_PrefabInstance: {fileID: 669784655}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83177d212aea930488dd185880e82d50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Launcher
 --- !u!1 &2042039787
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,6 +2461,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 537558134}
+  - {fileID: 1894866470}
   m_Father: {fileID: 2018547879}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
