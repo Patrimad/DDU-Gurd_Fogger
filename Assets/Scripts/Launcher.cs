@@ -3,13 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using TMPro;
+using Photon.Realtime;
 
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+
+    public static Launcher Instance;
+
+
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] TMP_Text errorText;
     [SerializeField] TMP_Text roomNameText;
+    [SerializeField] Transform roomListContent;
+    [SerializeField] GameObject RoomListItemPrefab;
+
+    void Awake()
+    {
+        Instance= this;
+    }
+
     void Start()
     {
         
@@ -57,8 +70,39 @@ public class Launcher : MonoBehaviourPunCallbacks
         MenuManager.Instance.OpenMenu("loading");
     }
 
+    public void JoinRoom (RoomInfo info)
+    {
+        PhotonNetwork.JoinRoom(info.Name);
+        MenuManager.Instance.OpenMenu("loading");
+    }
+
     public override void OnLeftRoom()
     {
         MenuManager.Instance.OpenMenu("title");
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        // Rens listen ved at køre baglæns (det er mere sikkert i Unity)
+        for (int i = roomListContent.childCount - 1; i >= 0; i--)
+        {
+            Destroy(roomListContent.GetChild(i).gameObject);
+        }
+
+        foreach (RoomInfo info in roomList)
+        {
+            // Spring over hvis rummet er fjernet
+            if (info.RemovedFromList)
+                continue;
+
+            // Lav knappen
+            GameObject entry = Instantiate(RoomListItemPrefab, roomListContent);
+
+            // Sikkerhedstjek: Find scriptet
+            if (entry.TryGetComponent(out RoomListItem listItem))
+            {
+                listItem.Setup(info);
+            }
+        }
     }
 }
