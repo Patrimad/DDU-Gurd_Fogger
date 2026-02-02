@@ -29,6 +29,6 @@ public class FPSCameraController : MonoBehaviour
         
         playerBody.Rotate(Vector3.up * mouseX);
         
-        transform.position = headBone.position + headBone.up * playerBody.position.y;
+        transform.position = headBone.position;
     }
 }
