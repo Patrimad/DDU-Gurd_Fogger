@@ -27,6 +27,9 @@ public class FPSControllerWithStates : MonoBehaviour
     private Vector3 moveInput;
     private bool isGrounded;
     private PlayerState currentState = PlayerState.Idle;
+    
+    [Header("Player Resource system")]
+    public PlayerResourceSystem resourceSystem;
 
     void Awake()
     {
@@ -40,22 +43,19 @@ public class FPSControllerWithStates : MonoBehaviour
 
     void Update()
     {
-        // -------- Input --------
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
         moveInput = (transform.right * x + transform.forward * z);
         moveInput = Vector3.ClampMagnitude(moveInput, 1f);
-
-        // -------- Ground Check --------
+        
         isGrounded = Physics.Raycast(
             groundCheckOrigin.position,
             Vector3.down,
             groundCheckDistance,
             groundMask
         );
-
-        // -------- Jump Input --------
+        
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             currentState = PlayerState.Jumping;
@@ -63,14 +63,13 @@ public class FPSControllerWithStates : MonoBehaviour
             animator.SetTrigger("Jump");
         }
 
-        // -------- Determine State --------
-        if (currentState != PlayerState.Jumping) // don't override Jumping mid-air
+        if (currentState != PlayerState.Jumping)
         {
             if (moveInput.magnitude == 0)
             {
                 currentState = PlayerState.Idle;
             }
-            else if (Input.GetKey(KeyCode.LeftShift))
+            else if (Input.GetKey(KeyCode.LeftShift) && resourceSystem.currentStamina > 0)
             {
                 currentState = PlayerState.Running;
             }
@@ -79,13 +78,13 @@ public class FPSControllerWithStates : MonoBehaviour
                 currentState = PlayerState.Walking;
             }
         }
-
-        // -------- Update Animator --------
+        
         float speedPercent = moveInput.magnitude * ((currentState == PlayerState.Running) ? 1f : 0.5f);
         animator.SetFloat("Speed", speedPercent, 0.1f, Time.deltaTime);
         animator.SetBool("IsGrounded", isGrounded);
         animator.SetBool("isRunning", currentState == PlayerState.Running);
         animator.SetBool("isWalking", currentState == PlayerState.Walking);
+        HandleStamina();
     }
 
     void FixedUpdate()
@@ -99,8 +98,7 @@ public class FPSControllerWithStates : MonoBehaviour
 
         Vector3 targetVelocity = moveInput * targetSpeed;
         rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
-
-        // Automatically return to Idle if grounded after Jump
+        
         if (currentState == PlayerState.Jumping && isGrounded)
         {
             currentState = PlayerState.Idle;
@@ -116,4 +114,48 @@ public class FPSControllerWithStates : MonoBehaviour
             groundCheckOrigin.position + Vector3.down * groundCheckDistance
         );
     }
+
+    void HandleStamina()
+    {
+        if (resourceSystem == null)
+        {
+            return;
+        }
+
+        // Drain stamina while running and moving
+        if (currentState == PlayerState.Running && moveInput.magnitude > 0)
+        {
+            int drain = Mathf.CeilToInt(15f * Time.deltaTime);
+            resourceSystem.TakeStamina(drain);
+
+            resourceSystem.staminaRegenTimer = resourceSystem.staminaCooldown;
+
+            if (resourceSystem.currentStamina <= 0)
+            {
+                currentState = PlayerState.Walking;
+            }
+        }
+        else
+        {
+            if (resourceSystem.staminaRegenTimer > 0f)
+            {
+                resourceSystem.staminaRegenTimer -= Time.deltaTime;
+                return;
+            }
+            
+            int regen = Mathf.CeilToInt(10f * Time.deltaTime);
+            resourceSystem.currentStamina = Mathf.Clamp(
+                resourceSystem.currentStamina + regen,
+                0,
+                resourceSystem.maxStamina
+            );
+
+            resourceSystem.staminaBar.SetValue(resourceSystem.currentStamina);
+            resourceSystem.staminaBar.SetText(
+                $"{resourceSystem.currentStamina} / {resourceSystem.maxStamina}"
+            );
+        }
+    }
+
+
 }

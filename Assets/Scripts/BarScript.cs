@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class BarScript : MonoBehaviour
 {
     public Slider slider;
-    public Text value;
+    public TextMeshProUGUI value;
 
 
     public void SetValue(int amount)
