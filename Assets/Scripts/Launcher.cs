@@ -86,7 +86,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(1); // Loader Scene 1. PhotonNetwork sørger for at alle spillere gør det efter der er trykket start game
     }
 
     public void LeaveRoom()
@@ -108,7 +108,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        // Rens listen ved at køre baglæns (det er mere sikkert i Unity)
+        
         for (int i = roomListContent.childCount - 1; i >= 0; i--)
         {
             Destroy(roomListContent.GetChild(i).gameObject);
