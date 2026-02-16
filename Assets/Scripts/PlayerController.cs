@@ -1,4 +1,5 @@
 using UnityEngine;
+using Photon.Pun;
 
 [RequireComponent(typeof(Rigidbody))]
 public class FPSControllerWithStates : MonoBehaviour
@@ -31,8 +32,11 @@ public class FPSControllerWithStates : MonoBehaviour
     [Header("Player Resource system")]
     public PlayerResourceSystem resourceSystem;
 
+    PhotonView PV;
+
     void Awake()
     {
+        PV = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
         rb.freezeRotation = true;
@@ -43,6 +47,7 @@ public class FPSControllerWithStates : MonoBehaviour
 
     void Update()
     {
+        if(!PV.IsMine) return;
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
