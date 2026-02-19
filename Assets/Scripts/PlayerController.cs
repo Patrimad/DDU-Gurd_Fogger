@@ -48,9 +48,33 @@ public class FPSControllerWithStates : MonoBehaviour
             groundCheckOrigin = transform;
     }
 
+    void Start()
+    {
+        if (!PV.IsMine)
+        {
+            // Slå alle kameraer fra
+            foreach (Camera cam in GetComponentsInChildren<Camera>(true))
+            {
+                cam.enabled = false;
+            }
+
+            // Slå alle AudioListeners fra
+            foreach (AudioListener al in GetComponentsInChildren<AudioListener>(true))
+            {
+                al.enabled = false;
+            }
+
+            // Slå UI (Canvas) fra
+            foreach (Canvas canvas in GetComponentsInChildren<Canvas>(true))
+            {
+                canvas.enabled = false;
+            }
+        }
+    }
     void Update()
     {
-        if(!PV.IsMine) return;
+        if (!PV.IsMine)
+            return;
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -97,6 +121,9 @@ public class FPSControllerWithStates : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!PV.IsMine)
+            return;
+
         float targetSpeed = currentState switch
         {
             PlayerState.Running => runSpeed,

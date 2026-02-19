@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class FPSCameraController : MonoBehaviour
@@ -10,14 +11,27 @@ public class FPSCameraController : MonoBehaviour
     
     float xRotation = 0f;
 
+    PhotonView PV;
+
+    void Awake()
+    {
+        PV = GetComponentInParent<PhotonView>();
+    }
+
     void Start()
     {
+        if (!PV.IsMine)
+        {
+            enabled = false; // sluk hele scriptet på remote players
+            return;
+        }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
+        
         float mouseX = Input.GetAxis("Mouse X") * mouseSensivity * 100 *  Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensivity * 100 * Time.deltaTime;
         float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel");
