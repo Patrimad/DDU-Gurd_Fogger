@@ -33,11 +33,14 @@ public class FPSControllerWithStates : MonoBehaviour
     public PlayerResourceSystem resourceSystem;
 
     PhotonView PV;
+    PlayerManager playerManager;
 
     void Awake()
     {
         PV = GetComponent<PhotonView>();
         rb = GetComponent<Rigidbody>();
+        playerManager = PhotonView.Find((int)PV.InstantiationData[0]).GetComponent<PlayerManager>();
+
         animator = GetComponentInChildren<Animator>();
         rb.freezeRotation = true;
 
