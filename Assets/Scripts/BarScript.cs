@@ -12,8 +12,17 @@ public class BarScript : MonoBehaviour
     {
         slider.value = amount;
     }
+    public void SetValue(float amount)
+    {
+        slider.value = amount;
+    }
 
     public void SetMaxValue(int amount)
+    {
+        slider.maxValue = amount;
+    }
+
+    public void SetMaxValue(float amount)
     {
         slider.maxValue = amount;
     }

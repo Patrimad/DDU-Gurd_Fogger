@@ -153,44 +153,20 @@ public class FPSControllerWithStates : MonoBehaviour
     void HandleStamina()
     {
         if (resourceSystem == null)
-        {
             return;
-        }
 
-        // Drain stamina while running and moving
         if (currentState == PlayerState.Running && moveInput.magnitude > 0)
         {
-            int drain = Mathf.CeilToInt(15f * Time.deltaTime);
-            resourceSystem.TakeStamina(drain);
+            resourceSystem.DrainStamina(Time.deltaTime);
 
-            resourceSystem.staminaRegenTimer = resourceSystem.staminaCooldown;
-
-            if (resourceSystem.currentStamina <= 0)
+            if (!resourceSystem.HasStamina())
             {
                 currentState = PlayerState.Walking;
             }
         }
         else
         {
-            if (resourceSystem.staminaRegenTimer > 0f)
-            {
-                resourceSystem.staminaRegenTimer -= Time.deltaTime;
-                return;
-            }
-            
-            int regen = Mathf.CeilToInt(10f * Time.deltaTime);
-            resourceSystem.currentStamina = Mathf.Clamp(
-                resourceSystem.currentStamina + regen,
-                0,
-                resourceSystem.maxStamina
-            );
-
-            resourceSystem.staminaBar.SetValue(resourceSystem.currentStamina);
-            resourceSystem.staminaBar.SetText(
-                $"{resourceSystem.currentStamina} / {resourceSystem.maxStamina}"
-            );
+            resourceSystem.RegenerateStamina(Time.deltaTime);
         }
     }
-
-
 }

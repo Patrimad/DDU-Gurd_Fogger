@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SOWeaponTemplate", menuName = "ScriptableObjects/Weapons")]
+[CreateAssetMenu(fileName = "NewWeaponTemplate", menuName = "Game/Weapon Template")]
 public class SOWeaponTemplate : ScriptableObject
 {
     public string templateId = "DefaultSword";

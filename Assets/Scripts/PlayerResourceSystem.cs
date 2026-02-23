@@ -1,4 +1,5 @@
 using UnityEngine;
+using static FPSControllerWithStates;
 
 public class PlayerResourceSystem : MonoBehaviour
 {
@@ -9,17 +10,17 @@ public class PlayerResourceSystem : MonoBehaviour
 
     [Header("MaxStats")]
     public int maxHealth  = 100;
-    public int maxStamina = 100;
+    public float maxStamina = 100f;
     public int maxMana = 0;
     
     [Header("Updated Stats")]
     public int currentHealth = 100;
+    public float currentStamina = 100f;
     public int currentMana = 0;
-    public int currentStamina = 100;
     
     public float staminaCooldown = 0.4f;
-    public int staminaDrainPerSecond = 15;
-    public int staminaRegenPerSecond = 10;
+    public float staminaDrainPerSecond = 15;
+    public float staminaRegenPerSecond = 10;
     public float staminaRegenTimer;
 
     
@@ -84,6 +85,40 @@ public class PlayerResourceSystem : MonoBehaviour
         currentStamina = Mathf.Max(currentStamina - amount, 0);
         staminaBar.SetValue(currentStamina);
         staminaBar.SetText($"{currentStamina} / {maxStamina}");
+    }
+    public void DrainStamina(float deltaTime)
+    {
+        currentStamina -= staminaDrainPerSecond * deltaTime;
+        currentStamina = Mathf.Max(currentStamina, 0f);
+
+        staminaRegenTimer = staminaCooldown;
+
+        UpdateStaminaUI();
+    }
+
+    public void RegenerateStamina(float deltaTime)
+    {
+        if (staminaRegenTimer > 0f)
+        {
+            staminaRegenTimer -= deltaTime;
+            return;
+        }
+
+        currentStamina += staminaRegenPerSecond * deltaTime;
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+
+        UpdateStaminaUI();
+    }
+
+    public bool HasStamina()
+    {
+        return currentStamina > 0f;
+    }
+
+    private void UpdateStaminaUI()
+    {
+        staminaBar.SetValue(currentStamina);
+        staminaBar.SetText($"{Mathf.CeilToInt(currentStamina)} / {Mathf.CeilToInt(maxStamina)}");
     }
 
     //Mana

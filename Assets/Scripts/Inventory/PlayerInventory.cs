@@ -1,7 +1,7 @@
-using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using UnityEngine;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 [RequireComponent(typeof(PhotonView))]
@@ -22,6 +22,13 @@ public class PlayerInventory : MonoBehaviourPunCallbacks
     void Start()
     {
         InitializeInventory();
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // Master gives starting weapons to EVERYONE (including self)
+            photonView.RPC(nameof(RPC_GiveStartingWeapons), RpcTarget.All);
+        }
+
         SyncInventoryToNetwork();
     }
 
@@ -49,18 +56,22 @@ public class PlayerInventory : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             TryChangeActiveSlot(0);
+            Debug.Log("Item slot 1");
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             TryChangeActiveSlot(1);
+            Debug.Log("Item slot 2");
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             TryChangeActiveSlot(2);
+            Debug.Log("Item slot 3");
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             TryChangeActiveSlot(3);
+            Debug.Log("Item slot 4");
         }
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -72,6 +83,7 @@ public class PlayerInventory : MonoBehaviourPunCallbacks
                 next = 0;
             }
             TryChangeActiveSlot(next);
+            Debug.Log($"{next} - scroll");
         }
         else if (scroll < -0.01f)
         {
@@ -81,6 +93,7 @@ public class PlayerInventory : MonoBehaviourPunCallbacks
                 prev = 3;
             }
             TryChangeActiveSlot(prev);
+            Debug.Log($"{prev} - scroll");
         }
     }
 
@@ -224,6 +237,33 @@ public class PlayerInventory : MonoBehaviourPunCallbacks
         activeSlotIndex = index;
         UnequipCurrent();
         EquipFromCurrentSlot();
+    }
+    [PunRPC]
+    private void RPC_GiveStartingWeapons()
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].Clear();
+        }
+
+        SOWeaponTemplate swordSO = Resources.Load<SOWeaponTemplate>("WeaponTemplates/Sword_Start");
+        if (swordSO != null)
+        {
+            WeaponData sword = swordSO.GenerateData(1);
+            TryAddWeapon(sword);
+        }
+        else
+        {
+            Debug.LogError("Master: Could not load Sword_Fast_01 template!");
+        }
+
+        // Force equip slot 0
+        activeSlotIndex = 0;
+        EquipFromCurrentSlot();
+
+        // Sync everything
+        photonView.RPC(nameof(NetworkSyncActiveSlot), RpcTarget.OthersBuffered, activeSlotIndex);
+        SyncInventoryToNetwork();
     }
 }
 
