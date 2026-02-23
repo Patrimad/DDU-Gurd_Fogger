@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Sword_Start : WeaponBase
+public class MeleeWeapon : WeaponBase
 {
     public override void PerformAttack()
     {
