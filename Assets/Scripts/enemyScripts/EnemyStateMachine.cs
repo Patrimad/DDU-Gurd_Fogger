@@ -266,4 +266,23 @@ public class EnemyStateMachine : MonoBehaviourPun
             Gizmos.DrawLine(transform.position, currentTarget.position);
         }
     }
+    private void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (photonView.InstantiationData == null || photonView.InstantiationData.Length == 0)
+            return;
+
+        int parentViewID = (int)photonView.InstantiationData[0];
+        PhotonView parentPV = PhotonView.Find(parentViewID);
+
+        if (parentPV != null)
+        {
+            // worldPositionStays = true → keeps the absolute world position we already set via PhotonNetwork.Instantiate
+            transform.SetParent(parentPV.transform, true);
+            Debug.Log($"Enemy {gameObject.name} parented to QuestManager");
+        }
+        else
+        {
+            Debug.LogWarning("Could not find parent PhotonView for enemy");
+        }
+    }
 }
