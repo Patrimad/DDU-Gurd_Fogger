@@ -2103,8 +2103,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1116798888}
     - target: {fileID: 6593294004827965013, guid: bb4cb82a7c007a6469df7d86fc4770f2, type: 3}
+      propertyPath: 'lines.Array.data[0]'
+      value: Hello, nice to meet you. I'm Banana man.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6593294004827965013, guid: bb4cb82a7c007a6469df7d86fc4770f2, type: 3}
       propertyPath: 'lines.Array.data[1]'
-      value: Suck my Cock Asshole.
+      value: I have quests for you.
+      objectReference: {fileID: 0}
+    - target: {fileID: 6593294004827965013, guid: bb4cb82a7c007a6469df7d86fc4770f2, type: 3}
+      propertyPath: 'lines.Array.data[2]'
+      value: Need weapons? I got that too.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
