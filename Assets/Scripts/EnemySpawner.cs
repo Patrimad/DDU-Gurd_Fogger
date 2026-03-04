@@ -6,10 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(PhotonView))]
 public class EnemySpawner : MonoBehaviourPun
 {
-    public List<Collider> spawnAreas = new List<Collider>();
+    [Header("Spawn Centers (Empty GameObjects)")]
+    public List<Transform> spawnPoints = new List<Transform>();
 
+    [Header("Spawn Area Settings")]
+    public float spawnDiameter = 20f;
+
+    [Header("Spawn Timing")]
     public float timeBetweenSpawns = 0.6f;
 
+    [Header("Test Spawn List")]
     public List<EnemySpawnEntry> testSpawnList = new List<EnemySpawnEntry>();
 
     [System.Serializable]
@@ -18,17 +24,14 @@ public class EnemySpawner : MonoBehaviourPun
         public GameObject prefab;
         public int count;
     }
+
     public void StartSpawningEnemies(List<EnemySpawnEntry> spawnList)
     {
         if (!PhotonNetwork.IsMasterClient)
-        {
             return;
-        }
 
         if (spawnList == null || spawnList.Count == 0)
-        {
             return;
-        }
 
         StartCoroutine(SpawnOverTimeCoroutine(spawnList));
     }
@@ -47,14 +50,21 @@ public class EnemySpawner : MonoBehaviourPun
 
     private void SpawnSingleEnemy(GameObject prefab)
     {
-        if (spawnAreas.Count == 0)
+        if (prefab == null)
         {
-            Debug.LogError("No spawn areas assigned!");
+            Debug.LogError("Spawn prefab is null!");
             return;
         }
 
-        Collider chosenArea = spawnAreas[Random.Range(0, spawnAreas.Count)];
-        Vector3 spawnPos = GetRandomPointInsideCollider(chosenArea);
+        if (spawnPoints.Count == 0)
+        {
+            Debug.LogError("No spawn points assigned!");
+            return;
+        }
+
+        Transform chosenPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+
+        Vector3 spawnPos = GetRandomPointInsideCircle(chosenPoint.position, spawnDiameter);
 
         Quaternion spawnRot = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
 
@@ -63,17 +73,33 @@ public class EnemySpawner : MonoBehaviourPun
         PhotonNetwork.Instantiate(prefab.name, spawnPos, spawnRot, 0, instantiationData);
     }
 
-    private Vector3 GetRandomPointInsideCollider(Collider col)
+    private Vector3 GetRandomPointInsideCircle(Vector3 center, float diameter)
     {
-        if (col == null) return transform.position;
-        if (col is SphereCollider sphere)
-        {
-            Vector3 center = col.transform.TransformPoint(sphere.center);
-            float radius = sphere.radius;
-            return center + Random.insideUnitSphere * radius;
-        }
+        float radius = diameter * 0.5f;
 
-        Bounds b = col.bounds;
-        return new Vector3(Random.Range(b.min.x, b.max.x), Random.Range(b.min.y, b.max.y), Random.Range(b.min.z, b.max.z));
+        Vector2 randomPoint = Random.insideUnitCircle * radius;
+
+        return new Vector3(
+            center.x + randomPoint.x,
+            center.y,
+            center.z + randomPoint.y
+        );
+    }
+
+    // Draw spawn areas in Scene view
+    private void OnDrawGizmosSelected()
+    {
+        if (spawnPoints == null) return;
+
+        Gizmos.color = Color.red;
+        float radius = spawnDiameter * 0.5f;
+
+        foreach (Transform point in spawnPoints)
+        {
+            if (point != null)
+            {
+                Gizmos.DrawWireSphere(point.position, radius);
+            }
+        }
     }
 }
