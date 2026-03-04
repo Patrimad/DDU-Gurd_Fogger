@@ -62,8 +62,8 @@ public class Dialogue : MonoBehaviour
     {
         foreach (char c in lines[index].ToCharArray())
         {
-            textComponent.text += c;
-            yield return new WaitForSeconds(textSpeed);
+            textComponent.text += c; // Taster hvert bogstav individuelt
+            yield return new WaitForSeconds(textSpeed); // Venter en given mængde tid mellem hvert bogstav
         }
     }
 

@@ -7,13 +7,13 @@ public class Menu : MonoBehaviour
     public bool open; 
     public void Open()
     {
-        open = true;
-        gameObject.SetActive(true);
+        open = true; // Hvis menu open kaldes, så er open = true
+        gameObject.SetActive(true); // Og så er menuen synliggjort
     }
 
     public void Close ()
     {
-        open = false;
-        gameObject.SetActive(false);
+        open = false; // Menuen sættes til open = false
+        gameObject.SetActive(false); // Og den bliver usynliggjort
     }
 }
