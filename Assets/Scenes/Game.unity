@@ -6777,6 +6777,10 @@ MonoBehaviour:
   testSpawnList:
   - prefab: {fileID: 1846262225889284678, guid: d375ab618e0357243bcbd1a64df6971d, type: 3}
     count: 20
+  - prefab: {fileID: 1846262225889284678, guid: d375ab618e0357243bcbd1a64df6971d, type: 3}
+    count: 20
+  - prefab: {fileID: 1846262225889284678, guid: d375ab618e0357243bcbd1a64df6971d, type: 3}
+    count: 20
 --- !u!114 &1537479588
 MonoBehaviour:
   m_ObjectHideFlags: 0
