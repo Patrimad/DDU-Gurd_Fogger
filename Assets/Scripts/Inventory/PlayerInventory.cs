@@ -25,7 +25,7 @@ public class PlayerInventory : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            // Master gives starting weapons to EVERYONE (including self)
+            // Master gives starting weapons to everyone
             photonView.RPC(nameof(RPC_GiveStartingWeapons), RpcTarget.All);
         }
 

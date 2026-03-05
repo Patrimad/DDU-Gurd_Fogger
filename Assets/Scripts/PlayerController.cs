@@ -1,5 +1,6 @@
-using UnityEngine;
 using Photon.Pun;
+using System;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class FPSControllerWithStates : MonoBehaviour
@@ -74,7 +75,9 @@ public class FPSControllerWithStates : MonoBehaviour
     void Update()
     {
         if (!PV.IsMine)
+        {
             return;
+        }
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -122,14 +125,23 @@ public class FPSControllerWithStates : MonoBehaviour
     void FixedUpdate()
     {
         if (!PV.IsMine)
-            return;
-
-        float targetSpeed = currentState switch
         {
-            PlayerState.Running => runSpeed,
-            PlayerState.Walking => walkSpeed,
-            _ => 0f
-        };
+            return;
+        }
+
+        float targetSpeed;
+        switch (currentState)
+        {
+            case PlayerState.Running:
+                targetSpeed = runSpeed;
+                break;
+            case PlayerState.Walking:
+                targetSpeed = walkSpeed;
+                break;
+            default:
+                targetSpeed = 0f;
+                break;
+        }
 
         Vector3 targetVelocity = moveInput * targetSpeed;
         rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);

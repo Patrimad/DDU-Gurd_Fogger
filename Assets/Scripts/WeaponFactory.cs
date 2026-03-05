@@ -5,7 +5,7 @@ public abstract class WeaponFactory
     public abstract WeaponData CreateWeaponData(SOWeaponTemplate template, int questLevel);
 }
 
-public class BalancedRogueLikeFactory : WeaponFactory
+public class RogueLikeWeaponFactory : WeaponFactory
 {
     public override WeaponData CreateWeaponData(SOWeaponTemplate template, int questLevel)
     {

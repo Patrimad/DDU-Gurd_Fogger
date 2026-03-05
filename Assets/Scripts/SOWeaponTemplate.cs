@@ -15,7 +15,7 @@ public class SOWeaponTemplate : ScriptableObject
 
     public WeaponData GenerateData(int questLevel)
     {
-        BalancedRogueLikeFactory factory = new BalancedRogueLikeFactory();
+        RogueLikeWeaponFactory factory = new RogueLikeWeaponFactory();
         return factory.CreateWeaponData(this, questLevel);
     }
 }
